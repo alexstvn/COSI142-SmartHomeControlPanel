@@ -1,0 +1,49 @@
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignore virtual environment directories
+env/
+venv/
+
+# Ignore Thonny IDE-related files (commonly used with MicroPython)
+*.thonny
+thonny-backups/
+
+# Ignore IDE and editor-specific files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ignore firmware and temporary files
+*.bin
+*.uf2
+*.hex
+*.elf
+
+# Ignore logs and debugging output
+*.log
+
+# Ignore Micropython-specific upload scripts or artifacts
+upload.py
+deploy.py
+
+# Ignore files for Raspberry Pi-specific tools
+*.img
+*.img.zip
+
+# Ignore test results
+*.pytest_cache/
+test-results/
+
+# Ignore custom configuration or credentials
+config.json
+*.env
+secrets.py
