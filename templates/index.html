@@ -3,9 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Home</title>
 </head>
 <body>
-    <p>hello</p>
+    <h1>Smart Home Control Panel</h1>
+
+    <p><strong>Temperature:</strong> <span id="temperature">Loading...</span></p>
+    <p><strong>Humidity:</strong> <span id="humidity">Loading...</span></p>
+
+
+    <script>
+        // Function to fetch the latest sensor data
+        function updateSensorDisplay() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    // Assume we are displaying data for a specific device_id
+                    const deviceId = 'temp_humidity_sensor';
+                    const deviceData = data[deviceId];
+
+                    if (deviceData) {
+                        document.getElementById('temperature').textContent = deviceData.temperature + ' °C';
+                        document.getElementById('humidity').textContent = deviceData.humidity + ' %';
+                    } else {
+                        console.warn('Device ID not found in data:', deviceId);
+                    }
+                })
+                .catch(error => console.error('Error fetching sensor data:', error));
+        }
+
+        // Periodically update the data every 5 seconds
+        setInterval(updateSensorDisplay, 5000);
+
+        // Initial update when the page loads
+        window.onload = updateSensorDisplay;
+    </script>
 </body>
 </html>

@@ -6,6 +6,7 @@ __pycache__/
 # Ignore virtual environment directories
 env/
 venv/
+.venv
 
 # Ignore Thonny IDE-related files (commonly used with MicroPython)
 *.thonny

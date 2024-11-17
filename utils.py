@@ -2,12 +2,7 @@ import network
 import urequests
 import time
 
-ssid = 'test123'
-password = '12345678'
-
-server_ip = '10.42.0.163'
-
-def connect_wifi():
+def connect_wifi(ssid, password):
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.connect(ssid, password)
@@ -22,9 +17,8 @@ def connect_wifi():
         max_wait -= 1
     raise Exception('Failed to connect to WiFi')
 
-def send_data():
-    url = f'http://{server_ip}:5000/data'  # Replace with your server's IP
-    data = {'sensor_value': 'testing'}  # Replace with your actual data
+def send_data(server_ip, data):
+    url = f'http://{server_ip}:5000/data'
     headers = {'Content-Type': 'application/json'}
     
     try:
@@ -33,7 +27,3 @@ def send_data():
         response.close()
     except Exception as e:
         print('Failed to send data:', e)
-
-# Main execution
-wlan = connect_wifi()
-send_data()
