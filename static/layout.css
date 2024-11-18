@@ -1,0 +1,28 @@
+nav {
+    background-color: gray; /* Dark background */
+    padding: 1em 0; /* Vertical padding */
+}
+
+nav ul {
+    list-style: none; /* Remove bullet points */
+    margin: 0;
+    padding: 0;
+    display: flex; /* Horizontal layout */
+    justify-content: flex-start; /* Align items to the left */
+    padding-left: 1em; /* Add padding to the left for spacing */
+}
+
+nav ul li {
+    margin: 0 1em; /* Horizontal spacing */
+}
+
+nav ul li a {
+    text-decoration: none; /* Remove underline */
+    color: white; /* White text color */
+    font-size: 1em; /* Slightly smaller font size */
+    transition: color 0.3s; /* Smooth color change */
+}
+
+nav ul li a:hover {
+    color: #ffcc00; /* Highlight color on hover */
+}
