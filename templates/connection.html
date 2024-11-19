@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}Connection{% endblock %}
+
+{% block content %}
+
+{% if server_ip %}
+    <p>server IP address: {{ server_ip }}</p>
+{% endif %}
+
+<ul>
+    {% if sensor_list %}
+        {% for sensor in sensor_list %}
+            <li>{{ sensor }}</li>
+        {% endfor %}
+    {% else %}
+        <li>No sensors available</li>
+    {% endif %}
+</ul>
+
+{% endblock %}

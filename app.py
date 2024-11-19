@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify, render_template
+from helper.ip import get_local_ip
 
 app = Flask(__name__)
 
 
 sensor_data = {}
-
+ip = get_local_ip()
 
 @app.route('/')
 def index():
@@ -14,6 +15,13 @@ def index():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+
+@app.route('/connection')
+def connection():
+    sensor_list = list(sensor_data.keys())
+    return render_template('connection.html', server_ip=ip, sensor_list=sensor_list)
+
 
 @app.route('/data', methods=['GET'])
 def get_sensor_data():
