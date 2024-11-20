@@ -3,8 +3,48 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<p><strong>Temperature:</strong> <span id="temperature">Loading...</span></p>
-<p><strong>Humidity:</strong> <span id="humidity">Loading...</span></p>
+<h1 id="home-title">Home</h1>
+
+<div class="sensors" id="sensors-div">
+    <!-- TEMPERATURE + HUMIDITY -->
+    <div id="temp-humid-div" class="temp-humid sensor-subsection">
+        <!-- IMG -->
+
+        <!-- TITLE -->
+
+        <!-- DATA READING -->
+        <p><strong>Temperature:</strong> <span id="temperature">Loading...</span></p>
+        <p><strong>Humidity:</strong> <span id="humidity">Loading...</span></p>
+
+        <!-- MANUAL ACCESS -->
+    </div>
+
+    <!-- AIR QUALITY -->
+    <div id="air-quality-div" class="air-quality sensor-subsection">
+        
+        <!-- IMG -->
+
+        <!-- TITLE -->
+
+        <!-- DATA READING -->
+        <p><strong>Field:</strong> <span id="pm25">Loading...</span></p>
+        <p><strong>Field:</strong> <span id="pm10">Loading...</span></p>
+
+        <!-- MANUAL ACCESS -->
+    </div>
+
+    <!-- MOTION SENSOR + LED -->
+    <div id="motion-div" class="motion sensor-subsection">
+        <!-- IMG -->
+
+        <!-- TITLE -->
+
+        <!-- DATA READING -->
+
+        <!-- MANUAL ACCESS -->
+    </div>
+
+</div>
 
 <script>
     // Function to fetch the latest sensor data

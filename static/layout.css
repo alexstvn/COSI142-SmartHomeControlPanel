@@ -1,3 +1,21 @@
+/* ------------------- WHOLE WEBPAGE / DEFAULTS ------------------- */
+/* for variable declarations */
+:root {
+    --ff-primary: 'Poppins', sans-serif;
+    --ff-accent:  'Limelight', serif;
+}
+
+/* default styling for all elements */
+* {
+    font-family: var(--ff-primary);
+}
+
+h1 { 
+    font-family: var(--ff-accent);
+}
+
+/* ------------------- LAYOUT/WHOLE/NAV ------------------- */
+/* ~~~~~~~~~~~~ NAV BAR ~~~~~~~~~~~~ */
 nav {
     background-color: gray; /* Dark background */
     padding: 1em 0; /* Vertical padding */
@@ -25,4 +43,11 @@ nav ul li a {
 
 nav ul li a:hover {
     color: #ffcc00; /* Highlight color on hover */
+}
+
+/* ------------------- HOME-PAGE SPECIFIC ------------------- */
+/* ~~~~~~~~~~~~ SENSOR MANAGEMENT ~~~~~~~~~~~~ */
+
+#sensors-div {
+    background-color: grey;
 }
