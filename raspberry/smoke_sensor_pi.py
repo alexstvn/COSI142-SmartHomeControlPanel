@@ -29,7 +29,6 @@ class HM3301Sensor:
             read = i2c_msg.read(HM3301_I2C_ADDR_READ >> 1, DATA_CNT)
             self.smbus.i2c_rdwr(read)
             data = list(read)
-            print("Raw data received:", data)
             if self.check_crc(data):
                 return data
             else:
