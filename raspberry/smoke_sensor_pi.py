@@ -1,6 +1,6 @@
 from smbus2 import SMBus, i2c_msg
 import time
-from utils import send_data
+from utils_pi import send_data
 
 # Constants
 HM3301_I2C_ADDR_WRITE = 0x80  # I2C write address
@@ -45,19 +45,10 @@ class HM3301Sensor:
 
     def parse_data(self, data):
         if data:
-            pm1_0_std = (data[4] << 8) | data[5]
-            pm2_5_std = (data[6] << 8) | data[7]
-            pm10_std = (data[8] << 8) | data[9]
-
-            pm1_0_atm = (data[10] << 8) | data[11]
             pm2_5_atm = (data[12] << 8) | data[13]
             pm10_atm = (data[14] << 8) | data[15]
 
             parsed_data = {
-                "pm1_0_std": pm1_0_std,
-                "pm2_5_std": pm2_5_std,
-                "pm10_std": pm10_std,
-                "pm1_0_atm": pm1_0_atm,
                 "pm2_5_atm": pm2_5_atm,
                 "pm10_atm": pm10_atm,
             }
