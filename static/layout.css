@@ -161,11 +161,33 @@ nav ul li a:hover {
 
 /* ------------------- ABOUT-PAGE SPECIFIC ------------------- */
 #members-div {
-    /* background-color: var(--color-dark1); */
-    padding: 10px;
-
-    /* Use CSS Grid to create columns */
+    /* Create a 2x2 grid */
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Three equal-width columns */
-    gap: 15px; /* Space between columns */
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    grid-template-rows: auto; /* Adjust rows automatically based on content */
+    gap: 15px; /* Space between cards */
+    padding: 10px; /* Add padding around the grid */
+}
+
+.member-card {
+    background-color: var(--color-light2);
+    border-radius: 15px;
+    overflow: hidden; /* Ensures the image doesn't show the background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for a polished look */
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column; /* Stack image and description vertically */
+}
+
+.member-card img {
+    width: 100%; /* Full width of the card */
+    height: 50%; /* Take up half of the card height */
+    object-fit: cover; /* Ensures the image scales properly */
+    display: block; /* Removes any extra inline spacing issues */
+}
+
+.member-desc {
+    padding: 10px; /* Add padding to the description section */
+    text-align: center; /* Center-align text */
+    flex-grow: 1; /* Ensures description takes remaining space */
 }
