@@ -17,6 +17,15 @@
     font-family: var(--ff-primary);
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    padding: 2em;
+}
+
 h2 { 
     font-family: var(--ff-accent);
 }
@@ -24,8 +33,9 @@ h2 {
 /* ------------------- LAYOUT/WHOLE/NAV ------------------- */
 /* ~~~~~~~~~~~~ NAV BAR ~~~~~~~~~~~~ */
 nav {
-    background-color: gray; /* Dark background */
+    background-color: var(--color-dark1); /* Dark background */
     padding: 1em 0; /* Vertical padding */
+    margin: 0;
 }
 
 nav ul {
@@ -74,6 +84,7 @@ nav ul li a:hover {
 
 .sensor-subsection h2 {
     text-align: center;
+    font-size: 20px;
 }
 
 .sensor-subsection h3 { 
@@ -84,6 +95,16 @@ nav ul li a:hover {
     border-radius: 10px;
     text-align: center;
 }
+
+/* BUTTON BEHAVIOR */
+
+.manual-button {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    gap: 10px; /* Space between buttons */
+    margin-top: 10px; /* Optional: Add spacing above buttons */
+}
+
 
 .on-button { 
     background-color: rgb(113, 201, 113);
@@ -99,6 +120,24 @@ nav ul li a:hover {
     border-color: white;
     padding: 5px 10px;
     cursor: pointer;
+}
+
+.on-button:hover { 
+    background-color: darkolivegreen;
+    border-radius: 5px;
+    border-color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: white;
+}
+
+.off-button:hover { 
+    background-color: rgb(125, 53, 53);
+    border-radius: 5px;
+    border-color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: white;
 }
 
 /* Optional: Add responsiveness for smaller screens */
