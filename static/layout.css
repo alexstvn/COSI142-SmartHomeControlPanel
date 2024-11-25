@@ -57,13 +57,23 @@ nav ul li a:hover {
 #sensors-div {
     /* background-color: var(--color-dark1); */
     padding: 10px;
+
+    /* Use CSS Grid to create columns */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three equal-width columns */
+    gap: 15px; /* Space between columns */
 }
 
 .sensor-subsection {
     background-color: var(--color-light2);
     border-radius: 15px;
     padding: 10px;
-    margin: 10px;
+    margin: 0; /* Remove margin to align with the grid gap */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for a polished look */
+}
+
+.sensor-subsection h2 {
+    text-align: center;
 }
 
 .sensor-subsection h3 { 
@@ -79,10 +89,27 @@ nav ul li a:hover {
     background-color: rgb(113, 201, 113);
     border-radius: 5px;
     border-color: white;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
 .off-button { 
     background-color: rgb(201, 113, 113);
     border-radius: 5px;
     border-color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+/* Optional: Add responsiveness for smaller screens */
+@media (max-width: 768px) {
+    #sensors-div {
+        grid-template-columns: repeat(1, 1fr); /* Two columns for medium screens */
+    }
+}
+
+@media (max-width: 480px) {
+    #sensors-div {
+        grid-template-columns: 1fr; /* One column for small screens */
+    }
 }
