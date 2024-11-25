@@ -17,6 +17,15 @@
     font-family: var(--ff-primary);
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    padding: 2em;
+}
+
 h2 { 
     font-family: var(--ff-accent);
 }
@@ -24,8 +33,9 @@ h2 {
 /* ------------------- LAYOUT/WHOLE/NAV ------------------- */
 /* ~~~~~~~~~~~~ NAV BAR ~~~~~~~~~~~~ */
 nav {
-    background-color: gray; /* Dark background */
+    background-color: var(--color-dark1); /* Dark background */
     padding: 1em 0; /* Vertical padding */
+    margin: 0;
 }
 
 nav ul {
@@ -57,13 +67,30 @@ nav ul li a:hover {
 #sensors-div {
     /* background-color: var(--color-dark1); */
     padding: 10px;
+
+    /* Use CSS Grid to create columns */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three equal-width columns */
+    gap: 15px; /* Space between columns */
 }
 
 .sensor-subsection {
     background-color: var(--color-light2);
     border-radius: 15px;
     padding: 10px;
-    margin: 10px;
+    margin: 0; /* Remove margin to align with the grid gap */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for a polished look */
+    transition: 0.3s;
+}
+
+/* On mouse-over, add a deeper shadow */
+.sensor-subsection:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+
+.sensor-subsection h2 {
+    text-align: center;
+    font-size: 20px;
 }
 
 .sensor-subsection h3 { 
@@ -75,14 +102,59 @@ nav ul li a:hover {
     text-align: center;
 }
 
+/* BUTTON BEHAVIOR */
+
+.manual-button {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    gap: 10px; /* Space between buttons */
+    margin-top: 10px; /* Optional: Add spacing above buttons */
+}
+
+
 .on-button { 
     background-color: rgb(113, 201, 113);
     border-radius: 5px;
     border-color: white;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
 .off-button { 
     background-color: rgb(201, 113, 113);
     border-radius: 5px;
     border-color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.on-button:hover { 
+    background-color: darkolivegreen;
+    border-radius: 5px;
+    border-color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: white;
+}
+
+.off-button:hover { 
+    background-color: rgb(125, 53, 53);
+    border-radius: 5px;
+    border-color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: white;
+}
+
+/* Optional: Add responsiveness for smaller screens */
+@media (max-width: 768px) {
+    #sensors-div {
+        grid-template-columns: repeat(1, 1fr); /* Two columns for medium screens */
+    }
+}
+
+@media (max-width: 480px) {
+    #sensors-div {
+        grid-template-columns: 1fr; /* One column for small screens */
+    }
 }
