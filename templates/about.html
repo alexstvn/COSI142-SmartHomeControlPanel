@@ -3,6 +3,29 @@
 {% block title %}About{% endblock %}
 
 {% block content %}
-<h1>About</h1>
-<p>this is the about page</p>
+
+
+<div id="about-the-project-div" class="about-the-project sensor-subsection">
+    <!-- TITLE -->
+    <h2>About the project</h2>
+
+    <!-- DATA READING -->
+    <p>This project represents an early stage for a simplified Smart Home Control Panel (SHCP).
+        As such, there are some sensors and devices that an SCHP user can trigger or control manually.
+        First off, there is a 'Temperature & Air Humidity' sensor, that gives relative readings, and can 
+        potentially trigger a fan if the temperature is too high. 
+        Secondly, there is an 'Air Quality' sensor that checks for the dust particles to evaluate the air purity.
+        Once the readings are too high, for the purpose of testing, the sensor triggers a fan as well.
+        Thirdly and lastly, there is a 'Motion' sensor, that is intended for detecting any motion in a closed space,
+        and trigger LED lights on - the LEDs are turned off once no motion has been detected for over a minute. </p>
+</div>
+
+<div id="about-the-project-div" class="about-the-project sensor-subsection"></div>
+    <!-- TITLE -->
+    <h2>About the team</h2>
+
+    <!-- DATA READING -->
+    <p>The team consists of 4: Madina Nasriddinova, Alex Stevenson, Zachery Hovatter, Bofan Chen.</p>
+</div>
+
 {% endblock %}
