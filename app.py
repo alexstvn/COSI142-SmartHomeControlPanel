@@ -1,11 +1,15 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 from helper.ip import get_local_ip
+from helper.kasa_helper import KasaHelper
 
 app = Flask(__name__)
 
 
 sensor_data = {}
 ip = get_local_ip()
+
+kasa = KasaHelper()
+kasa.discover_plugs()
 
 @app.route('/')
 def index():
@@ -17,11 +21,32 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/connection')
-def connection():
+@app.route('/devices')
+def devices():
     sensor_list = list(sensor_data.keys())
-    return render_template('connection.html', server_ip=ip, sensor_list=sensor_list)
+    plug_states = kasa.get_all_plug_states()
 
+    return render_template('devices.html', server_ip=ip, sensor_list=sensor_list, plugs=plug_states)
+
+
+
+
+@app.route('/on/<path:ip>')
+def turn_on(ip):
+    kasa.turn_on_plug(ip)
+    return redirect(url_for('devices'))
+
+@app.route('/off/<path:ip>')
+def turn_off(ip):
+    kasa.turn_off_plug(ip)
+    return redirect(url_for('devices'))
+
+@app.route('/rename/<path:ip>', methods=['POST'])
+def rename(ip):
+    new_alias = request.form.get('new_alias')
+    if new_alias:
+        kasa.rename_plug(ip, new_alias)
+    return redirect(url_for('devices'))
 
 @app.route('/data', methods=['GET'])
 def get_sensor_data():
