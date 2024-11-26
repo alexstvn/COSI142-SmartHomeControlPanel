@@ -161,9 +161,9 @@ nav ul li a:hover {
 
 /* ------------------- ABOUT-PAGE SPECIFIC ------------------- */
 #members-div {
-    /* Create a 2x2 grid */
+    /* Create a 4-column grid */
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    grid-template-columns: repeat(4, 1fr); /* Four equal-width columns */
     grid-template-rows: auto; /* Adjust rows automatically based on content */
     gap: 15px; /* Space between cards */
     padding: 10px; /* Add padding around the grid */
@@ -177,11 +177,20 @@ nav ul li a:hover {
     transition: 0.3s;
     display: flex;
     flex-direction: column; /* Stack image and description vertically */
+    align-items: stretch; /* Ensure consistent sizing */
+}
+
+.member-card p {
+    font-size: 12px;
+}
+
+.member-card h4 {
+    margin: 10px;
 }
 
 .member-card img {
     width: 100%; /* Full width of the card */
-    height: 50%; /* Take up half of the card height */
+    aspect-ratio: 1 / 1; /* Ensures the image is a square */
     object-fit: cover; /* Ensures the image scales properly */
     display: block; /* Removes any extra inline spacing issues */
 }
