@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}Connection{% endblock %}
+
+{% block content %}
+
+{% if server_ip %}
+    <p>server IP address: {{ server_ip }}</p>
+{% endif %}
+
+<ul>
+    Sensors
+    {% if sensor_list %}
+        {% for sensor in sensor_list %}
+            <li>{{ sensor }}</li>
+        {% endfor %}
+    {% else %}
+        <li>No sensors available</li>
+    {% endif %}
+</ul>
+
+<ul>
+    Smart Plugs
+    {% for ip, info in plugs.items() %}
+        <li>
+            <strong>Name:</strong> {{ info.alias }}<br>
+            <strong>IP:</strong> {{ ip }}<br>
+            <strong>Status:</strong> {% if info.is_on %}ON{% else %}OFF{% endif %}<br>
+            <a href="{{ url_for('turn_on', ip=ip) }}"><button>On</button></a>
+            <a href="{{ url_for('turn_off', ip=ip) }}"><button>Off</button></a>
+            <br><br>
+            <!-- Rename Form -->
+            <form action="{{ url_for('rename', ip=ip) }}" method="post">
+                <label for="new_alias_{{ loop.index }}">Rename:</label>
+                <input type="text" id="new_alias_{{ loop.index }}" name="new_alias" required>
+                <button type="submit">Rename</button>
+            </form>
+        </li>
+        <hr>
+    {% endfor %}
+</ul>
+
+
+
+{% endblock %}
