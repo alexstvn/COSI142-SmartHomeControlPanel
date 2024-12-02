@@ -98,7 +98,7 @@ nav ul li a:hover {
     padding: 5px;
     font-size: smaller;
     color: var(--color-light2);
-    border-radius: 10px;
+    border-radius: 5px;
     text-align: center;
 }
 
@@ -230,11 +230,13 @@ nav ul li a:hover {
 
 .sensors-devices, .plugs {
     background-color: var(--color-light2); /* Adjust to match design theme */
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visuals */
+    list-style: none; /* Remove bullet symbols */
 }
 
 .sensors-devices li, .plugs li {
     margin: 10px 0; /* Space between list items */
+    font-size: 14px;
 }

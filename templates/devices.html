@@ -10,7 +10,7 @@
 
 <div id="sensor-plugs-div">
     <ul class="sensors-devices" id="sensors-list">
-        Sensors
+        <strong>Sensors</strong>
         {% if sensor_list %}
             {% for sensor in sensor_list %}
                 <li>{{ sensor }}</li>
@@ -21,7 +21,7 @@
     </ul>
     
     <ul class="plugs" id="plugs-list">
-        Smart Plugs
+        <strong>Smart Plugs</strong>
         {% for ip, info in plugs.items() %}
             <li>
                 <strong>Name:</strong> {{ info.alias }}<br>
