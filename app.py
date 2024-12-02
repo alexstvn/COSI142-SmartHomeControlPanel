@@ -28,6 +28,10 @@ def devices():
 
     return render_template('devices.html', server_ip=ip, sensor_list=sensor_list, plugs=plug_states)
 
+@app.route('/control')
+def control():
+    return render_template('control.html')
+
 
 
 

@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}Manual Control{% endblock %}
+
+{% block content %}
+<h1>Manual Control Dashboard</h1>
+
+<!--TODO: Display current status of lights (on/off and color)-->
+<div class="light-control" id="light-control-div">
+    <h3>Turn Lights On/Off:</h3>
+    <div class="manual-button">
+        <button class="on-button">Turn On</button>
+        <button class="off-button">Turn off</button>
+    </div>
+    <h3>Change Light Color:</h3>
+    <!--TODO: Figure out how pico can receive data from http request to change color and implement buttons-->
+    <div class="manual-button">
+        <button class="white-button">White</button>
+        <button class="black-button">Black</button>
+        <button class="red-button">Red</button>
+        <button class="yellow-button">Yellow</button>
+        <button class="green-button">Green</button>
+        <button class="cyan-button">Cyan</button>
+        <button class="blue-button">Blue</button>
+        <button class="purple-button">Purple</button>
+    
+    </div>
+</div>
+
+{% if server_ip %}
+    <p>server IP address: {{ server_ip }}</p>
+{% endif %}
+
+
+{% endblock %}
