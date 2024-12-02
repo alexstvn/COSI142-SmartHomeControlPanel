@@ -200,3 +200,41 @@ nav ul li a:hover {
     text-align: center; /* Center-align text */
     flex-grow: 1; /* Ensures description takes remaining space */
 }
+
+/* Adjust responsiveness for smaller screens */
+@media (max-width: 768px) {
+    #members-div {
+        grid-template-columns: repeat(2, 1fr); /* Two columns for medium screens */
+    }
+}
+
+@media (max-width: 480px) {
+    #members-div {
+        grid-template-columns: 1fr; /* One column for small screens */
+    }
+}
+
+
+/* ------------------- DEVICES-PAGE SPECIFIC ------------------- */
+#sensor-plugs-div {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns for larger screens */
+    gap: 20px; /* Space between columns */
+}
+
+@media (max-width: 768px) {
+    #sensor-plugs-div {
+        grid-template-columns: 1fr; /* One column for smaller screens */
+    }
+}
+
+.sensors, .plugs {
+    background-color: var(--color-light2); /* Adjust to match design theme */
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visuals */
+}
+
+.sensors li, .plugs li {
+    margin: 10px 0; /* Space between list items */
+}
