@@ -1,1 +1,9 @@
+{% extends "layout.html" %}
 
+{% block title %}Connection{% endblock %}
+
+{% block content %}
+
+{% if server_ip %}
+    <p>server IP address: {{ server_ip }}</p>
+{% endif %}
