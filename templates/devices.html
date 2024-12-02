@@ -5,11 +5,11 @@
 {% block content %}
 
 {% if server_ip %}
-    <p>server IP address: {{ server_ip }}</p>
+    <p id="ip-p">server IP address: {{ server_ip }}</p>
 {% endif %}
 
 <div id="sensor-plugs-div">
-    <ul class="sensors" id="sensors-list">
+    <ul class="sensors-devices" id="sensors-list">
         Sensors
         {% if sensor_list %}
             {% for sensor in sensor_list %}
