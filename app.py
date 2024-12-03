@@ -4,10 +4,10 @@ from helper.kasa_helper import KasaHelper
 
 app = Flask(__name__)
 
-
 sensor_data = {}
 ip = get_local_ip()
 
+# for smart plug
 kasa = KasaHelper()
 kasa.discover_plugs()
 
@@ -28,6 +28,7 @@ def devices():
 
     return render_template('devices.html', server_ip=ip, sensor_list=sensor_list, plugs=plug_states)
 
+<<<<<<< HEAD
 @app.route('/control')
 def control():
     return render_template('control.html')
@@ -35,6 +36,8 @@ def control():
 
 
 
+=======
+>>>>>>> c86124aabe758d085f76e7964677b658b4ea2941
 @app.route('/on/<path:ip>')
 def turn_on(ip):
     kasa.turn_on_plug(ip)
