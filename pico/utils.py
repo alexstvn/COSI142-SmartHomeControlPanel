@@ -27,3 +27,15 @@ def send_data(server_ip, data):
         response.close()
     except Exception as e:
         print('Failed to send data:', e)
+
+def receive_data(server_ip):
+    url = f'http://{server_ip}:5000/data'
+    headers = {'Content-Type': 'application/json'}
+    
+    try:
+        response = urequests.get(url, headers=headers)
+        print('Response:', response.json())
+        response.close()
+        return response
+    except Exception as e:
+        print('Failed to retrieve data:', e)
