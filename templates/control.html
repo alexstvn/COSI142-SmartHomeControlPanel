@@ -9,23 +9,104 @@
 <div class="light-control" id="light-control-div">
     <h3>Turn Lights On/Off:</h3>
     <div class="manual-button">
-        <button class="on-button">Turn On</button>
-        <button class="off-button">Turn off</button>
+        <button onclick="updateLight('lights_1', true, 'WHITE')" class="on-button">Turn On</button>
+        <button onclick="updateLight('lights_1', false, 'WHITE')" class="off-button">Turn off</button>
     </div>
     <h3>Change Light Color:</h3>
     <!--TODO: Figure out how pico can receive data from http request to change color and implement buttons-->
     <div class="manual-button">
-        <button class="white-button">White</button>
-        <button class="black-button">Black</button>
-        <button class="red-button">Red</button>
-        <button class="yellow-button">Yellow</button>
-        <button class="green-button">Green</button>
-        <button class="cyan-button">Cyan</button>
-        <button class="blue-button">Blue</button>
-        <button class="purple-button">Purple</button>
+        <button onclick="updateLight('lights_1', true, 'WHITE')" class="white-button">White</button>
+        <button onclick="updateLight('lights_1', true, 'BLACK')" class="black-button">Black</button>
+        <button onclick="updateLight('lights_1', true, 'RED')" class="red-button">Red</button>
+        <button onclick="updateLight('lights_1', true, 'YELLOW')" class="yellow-button">Yellow</button>
+        <button onclick="updateLight('lights_1', true, 'GREEN')" class="green-button">Green</button>
+        <button onclick="updateLight('lights_1', true, 'CYAN')" class="cyan-button">Cyan</button>
+        <button onclick="updateLight('lights_1', true, 'BLUE')" class="blue-button">Blue</button>
+        <button onclick="updateLight('lights_1', true, 'PURPLE')" class="purple-button">Purple</button>
     
     </div>
 </div>
+
+<script>
+   function printSensorData() {
+        fetch('/data')
+            .then(response => response.json())
+            .then(data => {
+                // Assume we are displaying data for a specific device_id
+                // const deviceId = 'temp_humidity_sensor';
+                // const deviceData = data[deviceId];
+                console.log(data)
+            // if (deviceData) {
+            //         //document.getElementById('temperature').textContent = deviceData.temperature + ' °C';
+            //         //document.getElementById('humidity').textContent = deviceData.humidity + ' %';
+            //     } else {
+            //         console.warn('Device ID not found in data:', deviceId);
+            //     }
+            })
+            .catch(error => console.error('Error fetching sensor data:', error));
+        //console.log(data)
+        }
+    
+    function elementExists(device_id) {
+        fetch('/data')
+            .then(response => response.json())
+            .then(data => {
+                if (data[device_id]) {
+                    //console.log(data)
+                    return true
+                } else{
+                    return false
+                }
+            })
+    }
+
+    function lightSwitch(device_id = "lights_1", isOn) {
+        var updatedData;
+        if (!elementExists(device_id)) {
+            fetch('/data', {method: 'GET'})
+            .then(response => response.json())
+            .then(data => {
+              updatedData = data 
+              console.log(data) 
+            })
+        }
+        console.log(updatedData)
+//         const updatedData = {
+//          "device_id": device_id,
+//          "readings": {
+//              "isOn": isOn,
+//              "color": "WHITE"
+//          }
+//         }
+
+//         fetch('/data', {method: 'POST', headers: {
+//     'Content-Type': 'application/json'
+//   }, body: JSON.stringify(updatedData)})
+//             .then(response => response.json())
+//             .then(data => {
+//                 console.log(data)
+//             })
+    }
+
+    function updateLight(device_id, isOn, color) {
+        const updatedData = {
+         "device_id": device_id,
+         "readings": {
+             "isOn": isOn,
+             "color": color
+         }
+        }
+
+        fetch('/data', {method: 'POST', headers: {
+    'Content-Type': 'application/json'
+  }, body: JSON.stringify(updatedData)})
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+            })
+    }
+   
+</script>
 
 {% if server_ip %}
     <p>server IP address: {{ server_ip }}</p>
