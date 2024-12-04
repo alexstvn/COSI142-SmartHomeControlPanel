@@ -23,10 +23,8 @@ def about():
 
 @app.route('/devices')
 def devices():
-    sensor_list = list(sensor_data.keys())
     plug_states = kasa.get_all_plug_states()
-
-    return render_template('devices.html', server_ip=ip, sensor_list=sensor_list, plugs=plug_states)
+    return render_template('devices.html', server_ip=ip, sensor_data=sensor_data, plugs=plug_states)
 
 @app.route('/control')
 def control():
@@ -83,6 +81,10 @@ def receive_data():
     
     return jsonify({'status': 'error', 'message': 'Invalid data'}), 400
 
+
+@app.route('/submit_rule', methods=['POST'])
+def submit_rule():
+    return redirect(url_for('devices'))
 
 
 if __name__ == '__main__':
