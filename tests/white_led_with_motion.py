@@ -40,7 +40,7 @@ while True:
             'motion': motion_state
         }
     }
-    send_data('10.42.0.163', data)  # Replace with server's IP address
+    send_data('10.42.0.155', data)  # Replace with server's IP address
 
     # LED behavior based on motion state
     if motion_detected:

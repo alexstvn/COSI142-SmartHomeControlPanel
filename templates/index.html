@@ -34,8 +34,8 @@
         <h2>Air Quality</h2>
 
         <!-- DATA READING -->
-        <p><strong>Field:</strong> <span id="pm25">Loading...</span></p>
-        <p><strong>Field:</strong> <span id="pm10">Loading...</span></p>
+        <p><strong>PM2.5:</strong> <span id="pm25">Loading...</span></p>
+        <p><strong>PM10:</strong> <span id="pm10">Loading...</span></p>
 
         <!-- MANUAL ACCESS -->
         <h3 class="manual-access">Manually manage [insert here]</h3>
@@ -73,12 +73,22 @@
             .then(response => response.json())
             .then(data => {
                 // Assume we are displaying data for a specific device_id
-                const deviceId = 'temp_humidity_sensor';
-                const deviceData = data[deviceId];
+                let deviceId = 'temp_humidity_sensor';
+                let deviceData = data[deviceId];
 
                 if (deviceData) {
                     document.getElementById('temperature').textContent = deviceData.temperature + ' °C';
                     document.getElementById('humidity').textContent = deviceData.humidity + ' %';
+                } else {
+                    console.warn('Device ID not found in data:', deviceId);
+                }
+
+                deviceId = 'hm3301_sensor';
+                deviceData = data[deviceId]
+
+                if (deviceData) {
+                    document.getElementById('pm25').textContent = deviceData.pm2_5_atm + ' µg/m³';
+                    document.getElementById('pm10').textContent = deviceData.pm10_atm + ' µg/m³';
                 } else {
                     console.warn('Device ID not found in data:', deviceId);
                 }
