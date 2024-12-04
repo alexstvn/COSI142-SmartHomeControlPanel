@@ -54,7 +54,7 @@ def rename(ip):
 def get_sensor_data():
     return jsonify(sensor_data)
 
-
+# this method
 @app.route('/data', methods=['POST'])
 def receive_data():
 
