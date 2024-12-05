@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 from helper.ip import get_local_ip
 from helper.kasa_helper import KasaHelper
+from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 
@@ -8,6 +11,11 @@ sensor_data = {}
 ip = get_local_ip()
 
 automation_rules = []
+scheduled_tasks = []
+
+eastern = pytz.timezone('US/Eastern')
+scheduler = BackgroundScheduler(timezone=eastern)
+scheduler.start()
 
 # for smart plug
 kasa = KasaHelper()
@@ -26,7 +34,7 @@ def about():
 @app.route('/devices')
 def devices():
     plug_states = kasa.get_all_plug_states()
-    return render_template('devices.html', server_ip=ip, sensor_data=sensor_data, plugs=plug_states, automation_rules=automation_rules)
+    return render_template('devices.html', server_ip=ip, sensor_data=sensor_data, plugs=plug_states, automation_rules=automation_rules, scheduled_tasks=scheduled_tasks)
 
 @app.route('/control')
 def control():
@@ -151,6 +159,69 @@ def evaluate_condition(sensor_value, operator, threshold):
     elif operator == '=':
         return sensor_value == threshold
     return False
+
+
+
+@app.route('/add_schedule', methods=['POST'])
+def add_schedule():
+    """Add a scheduled action for a specific future time."""
+    plug_ip = request.form.get('plug_ip')
+    action = request.form.get('action')
+    scheduled_time_str = request.form.get('scheduled_time')
+
+    if not (plug_ip and action and scheduled_time_str):
+        return jsonify({'status': 'error', 'message': 'Missing data'}), 400
+
+    # Parse the scheduled time
+    try:
+        run_time = datetime.strptime(scheduled_time_str, '%Y-%m-%d %H:%M')
+    except ValueError:
+        return jsonify({'status': 'error', 'message': 'Invalid datetime format. Use YYYY-MM-DD HH:MM'}), 400
+
+    # Add a job to the scheduler
+    job = scheduler.add_job(
+        func=perform_scheduled_action,
+        trigger='date',
+        run_date=run_time,
+        args=[plug_ip, action]
+    )
+
+    scheduled_tasks.append({
+        'job_id': job.id,
+        'plug_ip': plug_ip,
+        'action': action,
+        'run_time': run_time.strftime('%Y-%m-%d %H:%M')
+    })
+
+    return redirect(url_for('devices'))
+
+@app.route('/delete_schedule/<job_id>', methods=['POST'])
+def delete_schedule(job_id):
+    """Delete a scheduled job."""
+    try:
+        scheduler.remove_job(job_id)
+    except:
+        pass  # Job may have already run or doesn't exist
+    # Remove from scheduled_tasks list
+    for i, task in enumerate(scheduled_tasks):
+        if task['job_id'] == job_id:
+            scheduled_tasks.pop(i)
+            break
+    return redirect(url_for('devices'))
+
+def perform_scheduled_action(plug_ip, action):
+    """This function is called by the scheduler at the scheduled time."""
+    print(f"Performing scheduled action: {action} on {plug_ip}")
+    plug_states = kasa.get_all_plug_states()
+    current_state = plug_states.get(plug_ip)
+    if current_state:
+        plug_is_on = current_state['is_on']
+        # Only perform action if plug is not already in desired state
+        if action == 'on' and not plug_is_on:
+            kasa.turn_on_plug(plug_ip)
+        elif action == 'off' and plug_is_on:
+            kasa.turn_off_plug(plug_ip)
+
 
 if __name__ == '__main__':
     # Set host to '0.0.0.0' to make the server accessible externally

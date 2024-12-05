@@ -102,6 +102,44 @@
 {% endfor %}
 </ul>
 
+<h1>Schedule Plug Actions</h1>
+    
+<form action="/add_schedule" method="post">
+    <label for="plug_ip">Target Plug:</label>
+    <select name="plug_ip" id="plug_ip">
+        {% for ip, p in plugs.items() %}
+            <option value="{{ ip }}">{{ p.alias }} ({{ ip }})</option>
+        {% endfor %}
+    </select>
+    <br><br>
+
+    <label for="action">Action:</label>
+    <select name="action">
+        <option value="on">on</option>
+        <option value="off">off</option>
+    </select>
+    <br><br>
+
+    <label for="scheduled_time">Scheduled Time (US/Eastern, YYYY-MM-DD HH:MM):</label>
+    <input type="text" name="scheduled_time" placeholder="2024-12-31 23:59">
+    <br><br>
+    
+    <input type="submit" value="Schedule Action">
+</form>
+
+<h2>Existing Schedules</h2>
+<ul>
+{% for task in scheduled_tasks %}
+    <li>
+        Plug: {{ task['plug_ip'] }} - Action: {{ task['action'] }} - Time: {{ task['run_time'] }}
+        <form action="/delete_schedule/{{ task['job_id'] }}" method="post" style="display:inline;">
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+{% endfor %}
+</ul>
+
+
 <script>
     const sensorData = {{ sensor_data|tojson }};
     const deviceSelect = document.getElementById('device_id');
