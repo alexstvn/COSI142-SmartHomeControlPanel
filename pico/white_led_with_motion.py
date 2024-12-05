@@ -2,6 +2,7 @@ from machine import Pin
 from utime import sleep, ticks_ms, ticks_diff
 from ws2812 import WS2812
 from utils import connect_wifi, send_data, receive_data
+from led_strip_helper import light_off, light_on, update_color
 
 # Define LED colors
 WHITE = (255, 255, 255)
@@ -47,13 +48,11 @@ def update_light(cur_data):
             cur_color = cur_data['lights_1']['color']
             cur_status = cur_data['lights_1']['isOn']
             if cur_status == False: #turn off lights if "Off" button is selected in control dashboard.
-                led.pixels_fill(OFF)
+                light_off(led)
             else:
-                led.pixels_fill(COLORS[cur_color])
-            led.pixels_show()
+                update_color(led, cur_color)    
     else:
-        led.pixels_fill(WHITE)
-        led.pixels_show()
+        light_on(led)
 
 # Main loop
 while True:
@@ -62,8 +61,7 @@ while True:
     if motion_detected: initialMotion = True
     
     if not initialMotion:
-        led.pixels_fill(OFF)
-        led.pixels_show()
+        light_off(led)
         continue
 
     # Format the data for the server
@@ -93,8 +91,7 @@ while True:
             print("No motion detected for over a minute, turning off LEDs")
 
             # Turn off LEDs
-            led.pixels_fill(OFF)
-            led.pixels_show()
+            light_off(led)
         else:
             # If timeout hasn't elapsed, continue updating color.
             update_light(cur_data)
