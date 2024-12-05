@@ -59,15 +59,15 @@
             <option value="off">Off</option>
         </select>
 
-        <label for="element2">Sensor</label>
-        <select id="element2" name="element2" onchange="updateReadings()">
+        <label for="sensor">Sensor</label>
+        <select id="sensor" name="sensor" onchange="updateReadings()">
             {% for sensor, readings in sensor_data.items() %}
                 <option value="{{ sensor }}">{{ sensor }}</option>
             {% endfor %}
         </select>
 
-        <label for="element3">Readings</label>
-        <select id="element3" name="element3">
+        <label for="reading">Readings</label>
+        <select id="reading" name="reading">
             <!-- Options will be dynamically populated -->
         </select>
 
@@ -88,6 +88,7 @@
     </form>
 </div>
 
+<!-- JAVASCRIPT FUNCTION -->
 <script>
     // Data structure passed from the server-side as JSON
     const sensorData = {{ sensor_data | tojson }};

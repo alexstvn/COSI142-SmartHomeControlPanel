@@ -11,6 +11,9 @@ ip = get_local_ip()
 kasa = KasaHelper()
 kasa.discover_plugs()
 
+# global variable
+rules = {}
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -84,6 +87,25 @@ def receive_data():
 
 @app.route('/submit_rule', methods=['POST'])
 def submit_rule():
+    # GETTING VALUES FROM FORM
+    plug_name = request.form.get("plug_name")
+    state = request.form.get("state")
+    sensor = request.form.get("sensor")
+    reading = request.form.get("reading")
+    condition = request.form.get("condition")
+    value = request.form.get("value")
+
+    new_entry = {"plug_name": plug_name,
+                 "state": state,
+                 "reading": reading,
+                 "condition": condition,
+                 "value": value}
+
+    if sensor not in rules:
+        rules[sensor] = []
+
+    rules[sensor].append(new_entry)
+
     return redirect(url_for('devices'))
 
 
