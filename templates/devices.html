@@ -42,80 +42,89 @@
     </ul>
 </div>
 
-<div>
-    <p>rules</p>
+<h1>Add a New Automation Rule</h1>
+<form action="/add_rule" method="post">
+    <label for="device_id">Device:</label>
+    <select name="device_id" id="device_id">
+        {% for device_id, readings in sensor_data.items() %}
+            <option value="{{ device_id }}">{{ device_id }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+    
+    <label for="reading">Reading:</label>
+    <select name="reading" id="reading">
+        <!-- Will be dynamically populated by JavaScript based on chosen device -->
+    </select>
+    <br><br>
+    
+    <label for="operator">Operator:</label>
+    <select name="operator" id="operator">
+        <option value=">">></option>
+        <option value="<"><</option>
+        <option value="=">=</option>
+    </select>
+    <br><br>
+    
+    <label for="threshold">Threshold Value:</label>
+    <input type="number" name="threshold" id="threshold" step="any" required>
+    <br><br>
+    
+    <label for="plug_ip">Target Plug:</label>
+    <select name="plug_ip" id="plug_ip">
+        {% for ip, p in plugs.items() %}
+            <option value="{{ ip }}">{{ p.alias }} ({{ ip }})</option>
+        {% endfor %}
+    </select>
+    <br><br>
+    
+    <label for="action">Action:</label>
+    <select name="action" id="action">
+        <option value="on">on</option>
+        <option value="off">off</option>
+    </select>
+    <br><br>
+    
+    <input type="submit" value="Add Rule">
+</form>
 
-    <form action="{{ url_for('submit_rule') }}" method="POST">
-        <label for="plug_name"></label>
-        <select id="plug_name" name="plug_name">
-            {% for ip, info in plugs.items() %}
-                <option value="{{ element }}">{{ info.alias }}</option>
-            {% endfor %}
-        </select>
-
-        <label for="state">will turn:</label>
-        <select id="state" name="state">
-            <option value="on">On</option>
-            <option value="off">Off</option>
-        </select>
-
-        <label for="element2">Sensor</label>
-        <select id="element2" name="element2" onchange="updateReadings()">
-            {% for sensor, readings in sensor_data.items() %}
-                <option value="{{ sensor }}">{{ sensor }}</option>
-            {% endfor %}
-        </select>
-
-        <label for="element3">Readings</label>
-        <select id="element3" name="element3">
-            <!-- Options will be dynamically populated -->
-        </select>
-
-
-        <label for="condition">is:</label>
-        <select id="condition" name="condition">
-            <option value=">">></option>
-            <option value="<"><</option>
-            <option value="=">=</option>
-            <option value=">=">>=</option>
-            <option value="<="><=</option>
-        </select>
-
-        <label for="value">Value:</label>
-        <input type="number" id="value" name="value" required>
-
-        <button type="submit">Submit</button>
-    </form>
-</div>
+<h2>Existing Rules</h2>
+<ul>
+{% for rule in automation_rules %}
+    <li>
+        Device: {{ rule.device_id }} - Reading: {{ rule.reading }} {{ rule.operator }} {{ rule.threshold }}
+        -> Target Plug: {{ rule.plug_ip }} 
+        Action: {{ rule.action }}
+        <form action="/delete_rule/{{ loop.index0 }}" method="post" style="display:inline;">
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+{% endfor %}
+</ul>
 
 <script>
-    // Data structure passed from the server-side as JSON
-    const sensorData = {{ sensor_data | tojson }};
+    const sensorData = {{ sensor_data|tojson }};
+    const deviceSelect = document.getElementById('device_id');
+    const readingSelect = document.getElementById('reading');
 
-    // Function to update the readings dropdown
-    function updateReadings() {
-        const sensorSelect = document.getElementById("element2");
-        const readingsSelect = document.getElementById("element3");
-
-        // Get the selected sensor
-        const selectedSensor = sensorSelect.value;
-
-        // Clear existing options in the readings dropdown
-        readingsSelect.innerHTML = "";
-
-        // Populate the readings dropdown with only reading names (keys)
-        if (sensorData[selectedSensor]) {
-            const readings = sensorData[selectedSensor];
-            for (const readingKey in readings) {
-                const option = document.createElement("option");
-                option.value = readingKey;
-                option.textContent = readingKey; // Only the name of the reading
-                readingsSelect.appendChild(option);
-            }
-        }
+    function populateReadings() {
+        const deviceId = deviceSelect.value;
+        const readings = deviceId in sensorData ? Object.keys(sensorData[deviceId]) : [];
+        
+        readingSelect.innerHTML = '';
+        readings.forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r;
+            opt.text = r;
+            readingSelect.appendChild(opt);
+        });
     }
 
-    // Initialize readings for the default selected sensor
-    document.addEventListener("DOMContentLoaded", updateReadings);
+    deviceSelect.addEventListener('change', populateReadings);
+    
+    // Populate on initial load (in case there's a default device selected)
+    window.addEventListener('load', populateReadings);
 </script>
+
+
 {% endblock %}

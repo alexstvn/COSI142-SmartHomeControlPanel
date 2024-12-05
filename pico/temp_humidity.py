@@ -28,7 +28,7 @@ while True:
         }
     }
 
-    send_data('10.42.0.163', data)
+    send_data('10.42.0.155', data)
 
     sleep(5)
 
