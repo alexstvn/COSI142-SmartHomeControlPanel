@@ -11,8 +11,8 @@
 <div id="sensor-plugs-div">
     <ul class="sensors-devices" id="sensors-list">
         <strong>Sensors</strong>
-        {% if sensor_list %}
-            {% for sensor in sensor_list %}
+        {% if sensor_data %}
+            {% for sensor in sensor_data %}
                 <li>{{ sensor }}</li>
             {% endfor %}
         {% else %}
@@ -27,14 +27,14 @@
                 <strong>Name:</strong> {{ info.alias }}<br>
                 <strong>IP:</strong> {{ ip }}<br>
                 <strong>Status:</strong> {% if info.is_on %}ON{% else %}OFF{% endif %}<br>
-                <a href="{{ url_for('turn_on', ip=ip) }}"><button>On</button></a>
-                <a href="{{ url_for('turn_off', ip=ip) }}"><button>Off</button></a>
+                <a href="{{ url_for('turn_on', ip=ip) }}"><button class="on-button">On</button></a>
+                <a href="{{ url_for('turn_off', ip=ip) }}"><button class="off-button">Off</button></a>
                 <br><br>
-                <!-- Rename Form -->
+
                 <form action="{{ url_for('rename', ip=ip) }}" method="post">
                     <label for="new_alias_{{ loop.index }}">Rename:</label>
                     <input type="text" id="new_alias_{{ loop.index }}" name="new_alias" required>
-                    <button type="submit">Rename</button>
+                    <button type="submit">Submit</button>
                 </form>
             </li>
             <hr>
@@ -42,4 +42,81 @@
     </ul>
 </div>
 
+<div>
+    <p>rules</p>
+
+    <form action="{{ url_for('submit_rule') }}" method="POST">
+        <label for="plug_name"></label>
+        <select id="plug_name" name="plug_name">
+            {% for ip, info in plugs.items() %}
+                <option value="{{ element }}">{{ info.alias }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="state">will turn:</label>
+        <select id="state" name="state">
+            <option value="on">On</option>
+            <option value="off">Off</option>
+        </select>
+
+        <label for="sensor">Sensor</label>
+        <select id="sensor" name="sensor" onchange="updateReadings()">
+            {% for sensor, readings in sensor_data.items() %}
+                <option value="{{ sensor }}">{{ sensor }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="reading">Readings</label>
+        <select id="reading" name="reading">
+            <!-- Options will be dynamically populated -->
+        </select>
+
+
+        <label for="condition">is:</label>
+        <select id="condition" name="condition">
+            <option value=">">></option>
+            <option value="<"><</option>
+            <option value="=">=</option>
+            <option value=">=">>=</option>
+            <option value="<="><=</option>
+        </select>
+
+        <label for="value">Value:</label>
+        <input type="number" id="value" name="value" required>
+
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<!-- JAVASCRIPT FUNCTION -->
+<script>
+    // Data structure passed from the server-side as JSON
+    const sensorData = {{ sensor_data | tojson }};
+
+    // Function to update the readings dropdown
+    function updateReadings() {
+        const sensorSelect = document.getElementById("element2");
+        const readingsSelect = document.getElementById("element3");
+
+        // Get the selected sensor
+        const selectedSensor = sensorSelect.value;
+
+        // Clear existing options in the readings dropdown
+        readingsSelect.innerHTML = "";
+
+        // Populate the readings dropdown with only reading names (keys)
+        if (sensorData[selectedSensor]) {
+            const readings = sensorData[selectedSensor];
+            for (const readingKey in readings) {
+                const option = document.createElement("option");
+                option.value = readingKey;
+                option.textContent = readingKey; // Only the name of the reading
+                readingsSelect.appendChild(option);
+            }
+        }
+    }
+
+    // Initialize readings for the default selected sensor
+    document.addEventListener("DOMContentLoaded", updateReadings);
+</script>
 {% endblock %}

@@ -11,6 +11,9 @@ ip = get_local_ip()
 kasa = KasaHelper()
 kasa.discover_plugs()
 
+# global variable
+rules = {}
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -23,10 +26,8 @@ def about():
 
 @app.route('/devices')
 def devices():
-    sensor_list = list(sensor_data.keys())
     plug_states = kasa.get_all_plug_states()
-
-    return render_template('devices.html', server_ip=ip, sensor_list=sensor_list, plugs=plug_states)
+    return render_template('devices.html', server_ip=ip, sensor_data=sensor_data, plugs=plug_states)
 
 @app.route('/control')
 def control():
@@ -54,7 +55,7 @@ def rename(ip):
 def get_sensor_data():
     return jsonify(sensor_data)
 
-
+# this method
 @app.route('/data', methods=['POST'])
 def receive_data():
 
@@ -83,6 +84,29 @@ def receive_data():
     
     return jsonify({'status': 'error', 'message': 'Invalid data'}), 400
 
+
+@app.route('/submit_rule', methods=['POST'])
+def submit_rule():
+    # GETTING VALUES FROM FORM
+    plug_name = request.form.get("plug_name")
+    state = request.form.get("state")
+    sensor = request.form.get("sensor")
+    reading = request.form.get("reading")
+    condition = request.form.get("condition")
+    value = request.form.get("value")
+
+    new_entry = {"plug_name": plug_name,
+                 "state": state,
+                 "reading": reading,
+                 "condition": condition,
+                 "value": value}
+
+    if sensor not in rules:
+        rules[sensor] = []
+
+    rules[sensor].append(new_entry)
+
+    return redirect(url_for('devices'))
 
 
 if __name__ == '__main__':
