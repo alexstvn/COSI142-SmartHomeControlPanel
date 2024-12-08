@@ -1,9 +1,9 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 from helper.ip import get_local_ip
 from helper.kasa_helper import KasaHelper
-from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
-import pytz
+from helper.scheduler import create_scheduler
+
 
 app = Flask(__name__)
 
@@ -13,13 +13,13 @@ ip = get_local_ip()
 automation_rules = []
 scheduled_tasks = []
 
-eastern = pytz.timezone('US/Eastern')
-scheduler = BackgroundScheduler(timezone=eastern)
+scheduler = create_scheduler('US/Eastern')
 scheduler.start()
 
 # for smart plug
 kasa = KasaHelper()
 kasa.discover_plugs()
+
 
 @app.route('/')
 def index():
@@ -36,9 +36,10 @@ def devices():
     plug_states = kasa.get_all_plug_states()
     return render_template('devices.html', server_ip=ip, sensor_data=sensor_data, plugs=plug_states, automation_rules=automation_rules, scheduled_tasks=scheduled_tasks)
 
-@app.route('/control')
-def control():
-    return render_template('control.html')
+
+@app.route('/led_control')
+def led_control():
+    return render_template('led.html')
 
 
 @app.route('/on/<path:ip>')
@@ -46,10 +47,12 @@ def turn_on(ip):
     kasa.turn_on_plug(ip)
     return redirect(url_for('devices'))
 
+
 @app.route('/off/<path:ip>')
 def turn_off(ip):
     kasa.turn_off_plug(ip)
     return redirect(url_for('devices'))
+
 
 @app.route('/rename/<path:ip>', methods=['POST'])
 def rename(ip):
@@ -57,6 +60,7 @@ def rename(ip):
     if new_alias:
         kasa.rename_plug(ip, new_alias)
     return redirect(url_for('devices'))
+
 
 @app.route('/data', methods=['GET'])
 def get_sensor_data():
@@ -116,6 +120,7 @@ def add_rule():
     else:
         return jsonify({'status': 'error', 'message': 'Invalid rule data'}), 400
     
+
 @app.route('/delete_rule/<int:rule_index>', methods=['POST'])
 def delete_rule(rule_index):
     if 0 <= rule_index < len(automation_rules):
@@ -123,43 +128,6 @@ def delete_rule(rule_index):
         return redirect(url_for('devices'))
     else:
         return jsonify({'status': 'error', 'message': 'Invalid rule index'}), 400
-
-
-def check_automation_rules(device_id, readings):
-    plug_states = kasa.get_all_plug_states()  # Update and get current states
-    for rule_index, rule in enumerate(automation_rules):
-        if rule['device_id'] == device_id:
-            sensor_value = readings.get(rule['reading'])
-            if sensor_value is not None and evaluate_condition(sensor_value, rule['operator'], rule['threshold']):
-                # Condition met - decide what to do with the target plug
-                target_plug_ip = rule.get('plug_ip')
-                action = rule.get('action')
-                
-                if target_plug_ip and action in ["on", "off"]:
-                    current_state = plug_states.get(target_plug_ip)
-                    if current_state:
-                        plug_is_on = current_state['is_on']
-                        
-                        # If action is turn_on and plug is currently off -> turn on
-                        if action == "on" and not plug_is_on:
-                            print(f"Triggering action for rule {rule_index}: Turning on {target_plug_ip}")
-                            kasa.turn_on_plug(target_plug_ip)
-                        
-                        # If action is turn_off and plug is currently on -> turn off
-                        elif action == "off" and plug_is_on:
-                            print(f"Triggering action for rule {rule_index}: Turning off {target_plug_ip}")
-                            kasa.turn_off_plug(target_plug_ip)
-                        # Otherwise, do nothing if the plug is already in the desired state.
-
-def evaluate_condition(sensor_value, operator, threshold):
-    if operator == '>':
-        return sensor_value > threshold
-    elif operator == '<':
-        return sensor_value < threshold
-    elif operator == '=':
-        return sensor_value == threshold
-    return False
-
 
 
 @app.route('/add_schedule', methods=['POST'])
@@ -195,6 +163,7 @@ def add_schedule():
 
     return redirect(url_for('devices'))
 
+
 @app.route('/delete_schedule/<job_id>', methods=['POST'])
 def delete_schedule(job_id):
     """Delete a scheduled job."""
@@ -209,6 +178,17 @@ def delete_schedule(job_id):
             break
     return redirect(url_for('devices'))
 
+
+def evaluate_condition(sensor_value, operator, threshold):
+    if operator == '>':
+        return sensor_value > threshold
+    elif operator == '<':
+        return sensor_value < threshold
+    elif operator == '=':
+        return sensor_value == threshold
+    return False
+
+
 def perform_scheduled_action(plug_ip, action):
     """This function is called by the scheduler at the scheduled time."""
     print(f"Performing scheduled action: {action} on {plug_ip}")
@@ -221,6 +201,33 @@ def perform_scheduled_action(plug_ip, action):
             kasa.turn_on_plug(plug_ip)
         elif action == 'off' and plug_is_on:
             kasa.turn_off_plug(plug_ip)
+
+
+def check_automation_rules(device_id, readings):
+    plug_states = kasa.get_all_plug_states()  # Update and get current states
+    for rule_index, rule in enumerate(automation_rules):
+        if rule['device_id'] == device_id:
+            sensor_value = readings.get(rule['reading'])
+            if sensor_value is not None and evaluate_condition(sensor_value, rule['operator'], rule['threshold']):
+                # Condition met - decide what to do with the target plug
+                target_plug_ip = rule.get('plug_ip')
+                action = rule.get('action')
+                
+                if target_plug_ip and action in ["on", "off"]:
+                    current_state = plug_states.get(target_plug_ip)
+                    if current_state:
+                        plug_is_on = current_state['is_on']
+                        
+                        # If action is turn_on and plug is currently off -> turn on
+                        if action == "on" and not plug_is_on:
+                            print(f"Triggering action for rule {rule_index}: Turning on {target_plug_ip}")
+                            kasa.turn_on_plug(target_plug_ip)
+                        
+                        # If action is turn_off and plug is currently on -> turn off
+                        elif action == "off" and plug_is_on:
+                            print(f"Triggering action for rule {rule_index}: Turning off {target_plug_ip}")
+                            kasa.turn_off_plug(target_plug_ip)
+                        # Otherwise, do nothing if the plug is already in the desired state.
 
 
 if __name__ == '__main__':
