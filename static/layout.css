@@ -219,6 +219,11 @@ nav ul li a:hover {
 
 
 /* ------------------- DEVICES-PAGE SPECIFIC ------------------- */
+h1.devices {
+    text-align: center;
+    padding-top: 10px;
+}
+
 #sensor-plugs-div {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Two columns for larger screens */
