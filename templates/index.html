@@ -17,12 +17,6 @@
         <p><strong>Temperature:</strong> <span id="temperature">Loading...</span></p>
         <p><strong>Humidity:</strong> <span id="humidity">Loading...</span></p>
 
-        <!-- MANUAL ACCESS -->
-        <h3 class="manual-access">Manually manage [insert here]</h3>
-        <div class="manual-button">
-            <button class="on-button">Turn On</button>
-            <button class="off-button">Turn off</button>
-        </div>
     </div>
 
     <!-- AIR QUALITY -->
@@ -37,12 +31,6 @@
         <p><strong>PM2.5:</strong> <span id="pm25">Loading...</span></p>
         <p><strong>PM10:</strong> <span id="pm10">Loading...</span></p>
 
-        <!-- MANUAL ACCESS -->
-        <h3 class="manual-access">Manually manage [insert here]</h3>
-        <div class="manual-button">
-            <button class="on-button">Turn On</button>
-            <button class="off-button">Turn off</button>
-        </div>
     </div>
 
     <!-- MOTION SENSOR + LED -->
@@ -55,13 +43,13 @@
         <!-- DATA READING -->
         <p><strong>Device:</strong> <span>Loading...</span></p>
         <p><strong>Device:</strong> <span>Loading...</span></p>
+    </div>
 
-        <!-- MANUAL ACCESS -->
-        <h3 class="manual-access">Manually manage [insert here]</h3>
-        <div class="manual-button">
-            <button class="on-button">Turn On</button>
-            <button class="off-button">Turn off</button>
-        </div>
+    <div>
+        <ul>
+            <li>You can set automation and scheduling rules for smart plugs in the <a href="{{ url_for('devices') }}">Devices page</a> </li>
+            <li>For customizing LED profile for displaying sensor readings go to the <a href="{{ url_for('led_control') }}">LED Control page</a></li>
+        </ul>
     </div>
 
 </div>
