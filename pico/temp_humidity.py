@@ -12,7 +12,7 @@ i2c0 = I2C(0, sda=i2c0_sda, scl=i2c0_scl)
 # Initialize the DHT20 sensor
 dht20 = DHT20(0x38, i2c0)
 
-connect_wifi('test123', '12345678')
+connect_wifi('73A', 'Brandeis73a')
 
 while True:
     # Read temperature and humidity from the sensor
@@ -28,7 +28,7 @@ while True:
         }
     }
 
-    send_data('10.42.0.155', data)
+    send_data('192.168.50.206', data)
 
     sleep(5)
 

@@ -1,35 +1,230 @@
 {% extends "layout.html" %}
 
-{% block title %}Manual Control{% endblock %}
+{% block title %}LED Control{% endblock %}
 
 {% block content %}
-<h1>Manual Control Dashboard</h1>
+<div class="container mt-5">
+    <h1>LED Control</h1>
 
-<!--TODO: Display current status of lights (on/off and color)-->
-<div class="light-control" id="light-control-div">
-    <h3>Turn Lights On/Off:</h3>
-    <div class="manual-button">
-        <button class="on-button">Turn On</button>
-        <button class="off-button">Turn off</button>
+    <!-- LED Switch Form -->
+    <form action="{{ url_for('led_switch') }}" method="POST" class="mb-4">
+        <label>
+            <input type="radio" name="status" value="on" required>
+            Turn ON
+        </label>
+        <br>
+        <label>
+            <input type="radio" name="status" value="off" required>
+            Turn OFF
+        </label>
+        <br><br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+        <!-- Profile Selection Form -->
+    <form action="{{ url_for('update_profile') }}" method="POST" class="mb-4">
+        <label for="profile_select" class="form-label">Select Profile:</label>
+        <select id="profile_select" name="profile_name" class="form-select" onchange="showProfileDetails()" required>
+            <option value="" disabled selected>Select a profile</option>
+            {% for profile in profiles %}
+                <option value="{{ profile.profile_name }}">{{ profile.profile_name }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Profile Details Display -->
+        <div id="profile_details" class="mt-3">
+            <p>No profile selected.</p>
+        </div>
+
+        <!-- Buttons for Setting and Deleting -->
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Set as Current Profile</button>
+            <button type="button" class="btn btn-danger" onclick="deleteProfile()">Delete Selected Profile</button>
+        </div>
+    </form>
+
+    <!-- Display Current Profile -->
+    <div id="current-profile" class="mt-5">
+        {% if curr_profile %}
+            <h3>Current Profile: {{ curr_profile.profile_name }}</h3>
+            <p><strong>Sensor ID:</strong> {{ curr_profile.sensor_id }}</p>
+            <p><strong>Reading:</strong> {{ curr_profile.reading }}</p>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Min</th>
+                        <th>Max</th>
+                        <th>Color</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for range in curr_profile.ranges %}
+                        <tr>
+                            <td>{{ range.min if range.min is not none else 'None' }}</td>
+                            <td>{{ range.max if range.max is not none else 'None' }}</td>
+                            <td style="background-color: {{ range.color }};">{{ range.color }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No current profile selected.</p>
+        {% endif %}
     </div>
-    <h3>Change Light Color:</h3>
-    <!--TODO: Figure out how pico can receive data from http request to change color and implement buttons-->
-    <div class="manual-button">
-        <button class="white-button">White</button>
-        <button class="black-button">Black</button>
-        <button class="red-button">Red</button>
-        <button class="yellow-button">Yellow</button>
-        <button class="green-button">Green</button>
-        <button class="cyan-button">Cyan</button>
-        <button class="blue-button">Blue</button>
-        <button class="purple-button">Purple</button>
-    
-    </div>
+
+    <!-- Submit New LED Profile -->
+    <h1 class="mt-5">Submit New LED Profile</h1>
+    <form action="{{ url_for('submit_profile') }}" method="POST">
+        <!-- Profile Name -->
+        <label for="profile_name">Profile Name:</label>
+        <input type="text" id="profile_name" name="profile_name" required class="form-control mb-3">
+
+        <!-- Device Dropdown -->
+        <label for="device_id">Device:</label>
+        <select name="device_id" id="device_id" onchange="populateReadings()" required class="form-select mb-3">
+            <option value="" disabled selected>Select a device</option>
+            {% for device_id, readings in sensor_data.items() %}
+                <option value="{{ device_id }}">{{ device_id }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Reading Dropdown -->
+        <label for="reading">Reading:</label>
+        <select name="reading" id="reading" required class="form-select mb-3"></select>
+
+        <!-- Ranges Table -->
+        <h3>Ranges</h3>
+        <table id="ranges-table" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Min</th>
+                    <th>Max</th>
+                    <th>Color</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="number" name="min[]" placeholder="Min" class="form-control"></td>
+                    <td><input type="number" name="max[]" placeholder="Max" class="form-control"></td>
+                    <td><input type="color" name="color[]" class="form-control"></td>
+                    <td><button type="button" onclick="removeRow(this)" class="btn btn-danger">Remove</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" onclick="addRangeRow()" class="btn btn-secondary mb-3">Add Range</button>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Submit Profile</button>
+    </form>
 </div>
 
-{% if server_ip %}
-    <p>server IP address: {{ server_ip }}</p>
-{% endif %}
+<script>
+    const sensorData = {{ sensor_data|tojson }};
+    const profiles = {{ profiles|tojson }};
+
+    // Populate readings dropdown based on selected device
+    function populateReadings() {
+        const deviceSelect = document.getElementById('device_id');
+        const readingSelect = document.getElementById('reading');
+        const deviceId = deviceSelect.value;
+
+        const readings = sensorData[deviceId] ? Object.keys(sensorData[deviceId]) : [];
+        readingSelect.innerHTML = '';
+        readings.forEach(reading => {
+            const option = document.createElement('option');
+            option.value = reading;
+            option.textContent = reading;
+            readingSelect.appendChild(option);
+        });
+    }
+
+    // Show profile details
+    function showProfileDetails() {
+        const profileSelect = document.getElementById('profile_select');
+        const selectedProfileName = profileSelect.value;
+        const profile = profiles.find(p => p.profile_name === selectedProfileName);
+
+        const profileDetailsDiv = document.getElementById('profile_details');
+        if (profile) {
+            let html = `
+                <h3>Selected Profile: ${profile.profile_name}</h3>
+                <p><strong>Sensor ID:</strong> ${profile.sensor_id}</p>
+                <p><strong>Reading:</strong> ${profile.reading}</p>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Min</th>
+                            <th>Max</th>
+                            <th>Color</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            profile.ranges.forEach(range => {
+                html += `
+                    <tr>
+                        <td>${range.min !== null ? range.min : 'None'}</td>
+                        <td>${range.max !== null ? range.max : 'None'}</td>
+                        <td style="background-color: ${range.color};">${range.color}</td>
+                    </tr>`;
+            });
+            html += `</tbody></table>`;
+            profileDetailsDiv.innerHTML = html;
+        } else {
+            profileDetailsDiv.innerHTML = "<p>No profile selected.</p>";
+        }
+    }
+
+    // Add a new range row to the table
+    function addRangeRow() {
+        const table = document.getElementById("ranges-table").querySelector("tbody");
+        const row = table.insertRow();
+        row.innerHTML = `
+            <td><input type="number" name="min[]" placeholder="Min" class="form-control" /></td>
+            <td><input type="number" name="max[]" placeholder="Max" class="form-control" /></td>
+            <td><input type="color" name="color[]" class="form-control" /></td>
+            <td><button type="button" onclick="removeRow(this)" class="btn btn-danger">Remove</button></td>
+        `;
+    }
+
+    // Remove a specific row from the table
+    function removeRow(button) {
+        const row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+    // Add event listeners
+    window.addEventListener('load', () => {
+        populateReadings(); // Populate readings on page load if a device is selected
+        document.getElementById('device_id').addEventListener('change', populateReadings);
+    });
 
 
+    function deleteProfile() {
+        const profileSelect = document.getElementById('profile_select');
+        const selectedProfile = profileSelect.value;
+
+        if (!selectedProfile) {
+            alert("Please select a profile to delete.");
+            return;
+        }
+
+        // Confirmation dialog
+        if (confirm(`Are you sure you want to delete the profile "${selectedProfile}"?`)) {
+            // Create a form and submit it to the delete_profile route
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{{ url_for('delete_profile') }}";
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'profile_name';
+            input.value = selectedProfile;
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
 {% endblock %}

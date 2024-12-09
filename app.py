@@ -16,6 +16,10 @@ scheduled_tasks = []
 scheduler = create_scheduler('US/Eastern')
 scheduler.start()
 
+led_state = {'status': 0, 'color': '#FFFFFF'}
+curr_profile = {}
+profiles = []
+
 # for smart plug
 kasa = KasaHelper()
 kasa.discover_plugs()
@@ -39,7 +43,95 @@ def devices():
 
 @app.route('/led_control')
 def led_control():
-    return render_template('led.html')
+    return render_template('led.html', sensor_data=sensor_data, profiles=profiles, curr_profile=curr_profile)
+
+
+@app.route('/led_switch', methods=['POST'])
+def led_switch():
+    state = request.form.get('status')
+    if state == 'on':
+        led_state['status'] = 1
+    elif state == 'off':
+        led_state['status'] = 0
+    else:
+        return "Invalid input", 400
+    
+    return redirect(url_for('led_control'))
+
+
+@app.route('/submit_profile', methods=['GET', 'POST'])
+def submit_profile():
+    if request.method == 'POST':
+        # Get form data
+        profile_name = request.form.get('profile_name')
+        sensor_id = request.form.get('device_id')
+        reading = request.form.get('reading')
+
+        # Extract ranges
+        min_values = request.form.getlist('min[]')
+        max_values = request.form.getlist('max[]')
+        color_values = request.form.getlist('color[]')
+
+        # Validate required fields
+        if not profile_name or not sensor_id or not reading or not min_values:
+            return "Invalid data received", 400
+
+        # Build ranges
+        ranges = []
+        for min_val, max_val, color in zip(min_values, max_values, color_values):
+            ranges.append({
+                "min": float(min_val) if min_val else None,
+                "max": float(max_val) if max_val else None,
+                "color": color
+            })
+
+        # Add new profile to profiles list
+        new_profile = {
+            "profile_name": profile_name,
+            "sensor_id": sensor_id,
+            "reading": reading,
+            "ranges": ranges
+        }
+        profiles.append(new_profile)
+
+        # Redirect to a control page or refresh the current page
+        return redirect(url_for('led_control'))
+
+    return redirect(url_for('led_control'))
+
+
+@app.route('/update_profile', methods=['POST'])
+def update_profile():
+    global curr_profile
+    selected_profile_name = request.form.get('profile_name')
+    for profile in profiles:
+        if profile['profile_name'] == selected_profile_name:
+            curr_profile = profile
+            break
+    return redirect(url_for('led_control'))
+
+
+
+@app.route('/delete_profile', methods=['POST'])
+def delete_profile():
+    global profiles, curr_profile
+
+    profile_name = request.form.get('profile_name')
+
+    # Remove the profile from the profiles list
+    profiles = [profile for profile in profiles if profile['profile_name'] != profile_name]
+
+    # If the deleted profile is the current profile, reset curr_profile
+    if curr_profile and curr_profile['profile_name'] == profile_name:
+        curr_profile = {}
+
+    # Redirect to the main page
+    return redirect(url_for('led_control'))
+
+
+@app.route('/led_state', methods=['GET'])
+def get_led_state():
+    return jsonify(led_state)
 
 
 @app.route('/on/<path:ip>')
@@ -69,21 +161,21 @@ def get_sensor_data():
 
 @app.route('/data', methods=['POST'])
 def receive_data():
-
-    # Endpoint for Pico W devices to report sensor data.
-    # Example Payload:
-    # {
-    #     "device_id": "sensor_1",
-    #     "readings": {
-    #         "temperature": 20,
-    #         "humidity": 10
-    #     }
-    # }
-
+    """
+    Endpoint for Pico W devices to report sensor data.
+    Example Payload:
+    {
+        "device_id": "sensor_1",
+        "readings": {
+            "temperature": 20,
+            "humidity": 10
+        }
+    }
+    """
     data = request.json
     device_id = data.get('device_id')
     readings = data.get('readings')  # This should be a dictionary of readings
-    
+
     if device_id and isinstance(readings, dict):
         # Update the datastore with readings for this device
         if device_id not in sensor_data:
@@ -92,8 +184,9 @@ def receive_data():
         
         print(device_id, sensor_data[device_id])
         check_automation_rules(device_id, sensor_data[device_id])
+        determine_color(device_id, readings)  # Determine LED color based on the profile
         return jsonify({'status': 'success'}), 200
-    
+
     return jsonify({'status': 'error', 'message': 'Invalid data'}), 400
 
 
@@ -228,6 +321,44 @@ def check_automation_rules(device_id, readings):
                             print(f"Triggering action for rule {rule_index}: Turning off {target_plug_ip}")
                             kasa.turn_off_plug(target_plug_ip)
                         # Otherwise, do nothing if the plug is already in the desired state.
+
+
+
+def determine_color(device_id, readings):
+    """
+    Determines the LED color based on the current profile and updates led_state's color.
+    The on/off status is handled separately.
+    """
+    global curr_profile, led_state
+
+    if not curr_profile:
+        return
+
+    # Check if the device_id matches the current profile's sensor_id
+    if curr_profile['sensor_id'] != device_id:
+        return
+
+    # Get the reading type from the profile
+    reading_type = curr_profile['reading']
+    reading_value = readings.get(reading_type)
+
+    if reading_value is None:
+        return
+
+    # Determine the color based on the ranges in the current profile
+    for range_item in curr_profile['ranges']:
+        min_value = range_item.get('min', None)
+        max_value = range_item.get('max', None)
+
+        # Check if the reading falls within the range
+        if (min_value is None or reading_value >= min_value) and (max_value is None or reading_value <= max_value):
+            led_state['color'] = range_item['color']  # Update only the color
+            print(f"Updated LED color to {range_item['color']} for reading {reading_value}.")
+            return
+
+    # If no range matches, no change to led_state
+    print(f"No matching range found for reading {reading_value}. LED color remains {led_state['color']}.")
+
 
 
 if __name__ == '__main__':
