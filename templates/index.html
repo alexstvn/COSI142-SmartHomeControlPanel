@@ -47,12 +47,15 @@
 
 </div>
 
+<br><br>
 
-<div class="links-home" id="links-div">
-    <ul>
-        <li>You can set automation and scheduling rules for smart plugs in the <a href="{{ url_for('devices') }}">Devices page</a> </li>
-        <li>For customizing LED profile for displaying sensor readings go to the <a href="{{ url_for('led_control') }}">LED Control page</a></li>
-    </ul>
+<div id="links-div" class="links sensor-subsection centered-section">
+    <h2>Automation & Customization</h2>
+    <p>You can manage your automation and LED customization here:</p>
+    <div style="text-align: center; margin-top: 10px;">
+        <a href="{{ url_for('devices') }}" class="devices-link">Go to Devices</a>
+        <a href="{{ url_for('led_control') }}" class="devices-link">Go to LED Control</a>
+    </div>
 </div>
 
 <script>

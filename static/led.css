@@ -1,0 +1,229 @@
+/* =======================
+    Overall Page Styling
+======================= */
+body {
+    background-color: #f9f6f2; /* Light mocha beige */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #4B3621; /* Dark brown for text */
+}
+
+/* Container Styling */
+.container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* =======================
+    Header Styling
+======================= */
+h1, h3 {
+    color: #8B5E3C; /* Mocha brown */
+    margin-bottom: 20px;
+}
+
+/* =======================
+    Form Styling
+======================= */
+form {
+    background-color: rgb(218,217,201);
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+}
+
+form label {
+    color: #5C4033;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Input and Select Fields */
+input[type="text"],
+input[type="number"],
+input[type="color"],
+select,
+.form-control {
+    border: 1px solid #d2b48c;
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+/* Radio Buttons Styling */
+form input[type="radio"] {
+    margin-right: 8px;
+}
+
+/* Color Picker Styling */
+input[type="color"] {
+    border: 1px solid #d2b48c;
+    border-radius: 4px;
+    padding: 0;
+    height: 40px; /* Adjust height to make it thicker */
+    width: 100%; /* Keep it consistent with other inputs */
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+/* =======================
+    Button Styling
+======================= */
+.btn-primary {
+    background-color: #8B5E3C;
+    border-color: #8B5E3C;
+    color: #ffffff;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #7a5035;
+    border-color: #7a5035;
+}
+
+.btn-danger {
+    background-color: #c0392b;
+    border-color: #c0392b;
+    color: #ffffff;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.btn-danger:hover {
+    background-color: #a93226;
+    border-color: #a93226;
+}
+
+/* =======================
+    Table Styling
+======================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #d2b48c;
+}
+
+table th {
+    background-color: #d2b48c;
+    color: #ffffff;
+}
+
+table td {
+    background-color: #fff;
+}
+
+/* Colored Cells */
+td[style*="background-color"] {
+    color: #ffffff;
+    text-align: center;
+}
+
+/* =======================
+    Section Specific Styling
+======================= */
+
+/* Profile Selection and Viewing Section */
+#profile_details {
+    background-color: #f5f0e1;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #d2b48c;
+}
+
+/* Current Profile Display */
+#current-profile {
+    background-color: #f5f0e1;
+    padding: 20px;
+    border-radius: 6px;
+    border: 1px solid #d2b48c;
+}
+
+/* New Profile Submission Form */
+#new-profile-form {
+    /* Additional styling if needed */
+}
+
+/* =======================
+    Utility Classes
+======================= */
+.mb-3 {
+    margin-bottom: 1rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.mt-3 {
+    margin-top: 1rem !important;
+}
+
+.mt-5 {
+    margin-top: 3rem !important;
+}
+
+/* =======================
+    Ranges Table Specific Styling
+======================= */
+
+/* Updated Ranges Table Styling */
+#ranges-table {
+    background-color: #f5f0e1; /* Light beige for the table background */
+    border: 1px solid #d2b48c; /* Tan border */
+}
+
+#ranges-table th {
+    background-color: #c4a484; /* Medium tan for headers */
+    color: #ffffff; /* White text */
+    text-align: center; /* Center text alignment */
+}
+
+#ranges-table td {
+    background-color: #f9f6f2; /* Light beige for cells */
+    color: #4B3621; /* Dark brown text */
+    text-align: center; /* Center text alignment */
+}
+
+#ranges-table tbody tr:hover {
+    background-color: #eae2d0; /* Slightly darker beige for hover effect */
+    transition: background-color 0.3s;
+}
+
+/* Update Remove Button Styling */
+#ranges-table .btn-danger {
+    background-color: #c0392b; /* Consistent with delete button colors */
+    border-color: #c0392b;
+}
+
+#ranges-table .btn-danger:hover {
+    background-color: #a93226; /* Darker red on hover */
+    border-color: #a93226;
+}
+
+/* Hover Effect for Table Rows */
+#ranges-table tbody tr:hover {
+    background-color: #f0e6dc; /* Slightly darker on hover */
+    transition: background-color 0.3s;
+}
+
+/* =======================
+    Responsive Design
+======================= */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    table th, table td {
+        padding: 8px;
+    }
+}

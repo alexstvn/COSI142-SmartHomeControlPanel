@@ -2,7 +2,12 @@
 
 {% block title %}LED Control{% endblock %}
 
+{% block extra_head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='led.css') }}">
+{% endblock %}
+
 {% block content %}
+
 <div class="container mt-5">
     <h1>LED Control</h1>
 
@@ -12,12 +17,10 @@
             <input type="radio" name="status" value="on" required>
             Turn ON
         </label>
-        <br>
         <label>
             <input type="radio" name="status" value="off" required>
             Turn OFF
         </label>
-        <br><br>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
@@ -112,7 +115,7 @@
                 </tr>
             </tbody>
         </table>
-        <button type="button" onclick="addRangeRow()" class="btn btn-secondary mb-3">Add Range</button>
+        <button type="button" onclick="addRangeRow()" class="btn btn-primary mb-3">Add Range</button>
 
         <!-- Submit Button -->
         <button type="submit" class="btn btn-primary">Submit Profile</button>
