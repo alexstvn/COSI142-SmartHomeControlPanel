@@ -163,7 +163,10 @@ nav ul li a:hover {
 
 
 /* ------------------- ABOUT-PAGE SPECIFIC ------------------- */
-#members-div {
+/* ~~~~~~~~~ ABOUT SENSORS ~~~~~~~~~ */
+
+/* ~~~~~~~~~ MEMBERS ~~~~~~~~~ */
+#members-div, #abt-sensors-div {
     /* Create a 4-column grid */
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* Four equal-width columns */
@@ -172,7 +175,7 @@ nav ul li a:hover {
     padding: 10px; /* Add padding around the grid */
 }
 
-.member-card {
+.abt-4-card {
     background-color: var(--color-light2);
     border-radius: 15px;
     overflow: hidden; /* Ensures the image doesn't show the background */
@@ -183,11 +186,11 @@ nav ul li a:hover {
     align-items: stretch; /* Ensure consistent sizing */
 }
 
-.member-card p {
+.abt-4-card p {
     font-size: 12px;
 }
 
-.member-card h4 {
+.abt-4-card h4 {
     margin: 10px;
 }
 
@@ -198,7 +201,7 @@ nav ul li a:hover {
     display: block; /* Removes any extra inline spacing issues */
 }
 
-.member-desc {
+.member-desc, .sensor-desc {
     padding: 10px; /* Add padding to the description section */
     text-align: center; /* Center-align text */
     flex-grow: 1; /* Ensures description takes remaining space */
@@ -206,13 +209,13 @@ nav ul li a:hover {
 
 /* Adjust responsiveness for smaller screens */
 @media (max-width: 768px) {
-    #members-div {
+    #members-div, #abt-sensors-div {
         grid-template-columns: repeat(2, 1fr); /* Two columns for medium screens */
     }
 }
 
 @media (max-width: 480px) {
-    #members-div {
+    #members-div, #abt-sensors-div {
         grid-template-columns: 1fr; /* One column for small screens */
     }
 }
