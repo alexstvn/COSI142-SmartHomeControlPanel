@@ -42,102 +42,121 @@
     </ul>
 </div>
 
-<h1>Add a New Automation Rule</h1>
-<form action="/add_rule" method="post">
-    <label for="device_id">Device:</label>
-    <select name="device_id" id="device_id">
-        {% for device_id, readings in sensor_data.items() %}
-            <option value="{{ device_id }}">{{ device_id }}</option>
-        {% endfor %}
-    </select>
-    <br><br>
-    
-    <label for="reading">Reading:</label>
-    <select name="reading" id="reading">
-        <!-- Will be dynamically populated by JavaScript based on chosen device -->
-    </select>
-    <br><br>
-    
-    <label for="operator">Operator:</label>
-    <select name="operator" id="operator">
-        <option value=">">></option>
-        <option value="<"><</option>
-        <option value="=">=</option>
-    </select>
-    <br><br>
-    
-    <label for="threshold">Threshold Value:</label>
-    <input type="number" name="threshold" id="threshold" step="any" required>
-    <br><br>
-    
-    <label for="plug_ip">Target Plug:</label>
-    <select name="plug_ip" id="plug_ip">
-        {% for ip, p in plugs.items() %}
-            <option value="{{ ip }}">{{ p.alias }} ({{ ip }})</option>
-        {% endfor %}
-    </select>
-    <br><br>
-    
-    <label for="action">Action:</label>
-    <select name="action" id="action">
-        <option value="on">on</option>
-        <option value="off">off</option>
-    </select>
-    <br><br>
-    
-    <input type="submit" value="Add Rule">
-</form>
+<!-- ~~~~~~~~~~~~~~~~~ RULES ~~~~~~~~~~~~~~~~~ -->
+ 
+<h1>Automation Rules</h1>
+<div class="rules automation">
+    <div class="new-rule devices-add-new-div" id="new-rule-div">
+        <h2 class="new-rule">Add a New Automation Rule</h2>
+        <form action="/add_rule" method="post" class="new-rule device-form" id="new-rule-form">
+            <label for="device_id">Device:</label>
+            <select name="device_id" id="device_id">
+                {% for device_id, readings in sensor_data.items() %}
+                    <option value="{{ device_id }}">{{ device_id }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            
+            <label for="reading">Reading:</label>
+            <select name="reading" id="reading">
+                <!-- Will be dynamically populated by JavaScript based on chosen device -->
+            </select>
+            <br>
+            
+            <label for="operator">Operator:</label>
+            <select name="operator" id="operator">
+                <option value=">">></option>
+                <option value="<"><</option>
+                <option value="=">=</option>
+            </select>
+            <br>
+            
+            <label for="threshold">Threshold Value:</label>
+            <input type="number" name="threshold" id="threshold" step="any" required>
+            <br>
+            
+            <label for="plug_ip">Target Plug:</label>
+            <select name="plug_ip" id="plug_ip">
+                {% for ip, p in plugs.items() %}
+                    <option value="{{ ip }}">{{ p.alias }} ({{ ip }})</option>
+                {% endfor %}
+            </select>
+            <br>
+            
+            <label for="action">Action:</label>
+            <select name="action" id="action">
+                <option value="on">on</option>
+                <option value="off">off</option>
+            </select>
+            <br>
+            
+            <input class="devices-submit" type="submit" value="Add Rule">
+        </form>    
+    </div>
 
-<h2>Existing Rules</h2>
-<ul>
-{% for rule in automation_rules %}
-    <li>
-        Device: {{ rule.device_id }} - Reading: {{ rule.reading }} {{ rule.operator }} {{ rule.threshold }}
-        -> Target Plug: {{ rule.plug_ip }} 
-        Action: {{ rule.action }}
-        <form action="/delete_rule/{{ loop.index0 }}" method="post" style="display:inline;">
-            <button type="submit">Delete</button>
-        </form>
-    </li>
-{% endfor %}
-</ul>
+    <div class="existing-rules devices-existing-div" id="existing-rules-div">
+        <h2>Existing Rules</h2>
+        <ul class="existing-list existing-rules">
+        {% for rule in automation_rules %}
+            <li>
+                Device: {{ rule.device_id }} - Reading: {{ rule.reading }} {{ rule.operator }} {{ rule.threshold }}
+                -> Target Plug: {{ rule.plug_ip }} 
+                Action: {{ rule.action }}
+                <form action="/delete_rule/{{ loop.index0 }}" method="post" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+ </div>
+
+<!-- ~~~~~~~~~~~~~~~~~ SCHEDULED ACTIONS ~~~~~~~~~~~~~~~~~ -->
 
 <h1>Schedule Plug Actions</h1>
-    
-<form action="/add_schedule" method="post">
-    <label for="plug_ip">Target Plug:</label>
-    <select name="plug_ip" id="plug_ip">
-        {% for ip, p in plugs.items() %}
-            <option value="{{ ip }}">{{ p.alias }} ({{ ip }})</option>
-        {% endfor %}
-    </select>
-    <br><br>
+<div class="schedules automation" id="schedules-div">
+    <div class="new-schedule devices-add-new-div">
+        <h2>Schedule New Action</h2>
+        <form action="/add_schedule" method="post" class="new-schedule device-form" id="new-schedule-form">
+            <label for="plug_ip">Target Plug:</label>
+            <select name="plug_ip" id="plug_ip">
+                {% for ip, p in plugs.items() %}
+                    <option value="{{ ip }}">{{ p.alias }} ({{ ip }})</option>
+                {% endfor %}
+            </select>
+            <br>
 
-    <label for="action">Action:</label>
-    <select name="action">
-        <option value="on">on</option>
-        <option value="off">off</option>
-    </select>
-    <br><br>
+            <label for="action">Action:</label>
+            <select name="action">
+                <option value="on">on</option>
+                <option value="off">off</option>
+            </select>
+            <br>
 
-    <label for="scheduled_time">Scheduled Time (US/Eastern, YYYY-MM-DD HH:MM):</label>
-    <input type="text" name="scheduled_time" placeholder="2024-12-31 23:59">
-    <br><br>
-    
-    <input type="submit" value="Schedule Action">
-</form>
-
-<h2>Existing Schedules</h2>
-<ul>
-{% for task in scheduled_tasks %}
-    <li>
-        Plug: {{ task['plug_ip'] }} - Action: {{ task['action'] }} - Time: {{ task['run_time'] }}
-        <form action="/delete_schedule/{{ task['job_id'] }}" method="post" style="display:inline;">
-            <button type="submit">Delete</button>
+            <label for="scheduled_time">Scheduled Time (US/Eastern, YYYY-MM-DD HH:MM):</label>
+            <input type="text" name="scheduled_time" placeholder="2024-12-31 23:59">
+            <br>
+            
+            <input class="devices-submit" type="submit" value="Schedule Action">
         </form>
-    </li>
-{% endfor %}
-</ul>
+    </div>
+
+    <div class="existing-schedules devices-existing-div">
+        <h2 class="existing-schedules">Existing Schedules</h2>
+        <ul class="existing-list existing-schedules">
+        {% for task in scheduled_tasks %}
+            <li>
+                Plug: {{ task['plug_ip'] }} - Action: {{ task['action'] }} - Time: {{ task['run_time'] }}
+                <form action="/delete_schedule/{{ task['job_id'] }}" method="post" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+
 
 
 <script>

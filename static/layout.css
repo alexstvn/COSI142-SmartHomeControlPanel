@@ -2,7 +2,7 @@
 /* for variable declarations */
 :root {
     --ff-primary: 'Poppins', sans-serif;
-    --ff-accent:  'Limelight', serif;
+    --ff-accent:  'DM Serif Display', serif;
 
     --color-light1: #F7EBCC;
     --color-light2: #DAD9C7;
@@ -159,6 +159,9 @@ nav ul li a:hover {
     }
 }
 
+/* ~~~~~~~~~~~~ LINKS ~~~~~~~~~~~~ */
+
+
 /* ------------------- ABOUT-PAGE SPECIFIC ------------------- */
 #members-div {
     /* Create a 4-column grid */
@@ -239,4 +242,96 @@ nav ul li a:hover {
 .sensors-devices li, .plugs li {
     margin: 10px 0; /* Space between list items */
     font-size: 14px;
+}
+
+/* ~~~~~~~~~~~~ RULES + SCHEDULES ~~~~~~~~~~~~ */
+.automation {
+    display: flex;
+    justify-content: space-between; /* Space between the two sections */
+    width: 100%; /* Ensure the div takes up the full width of its parent */
+}
+
+.devices-add-new-div {
+    width: 40%; /* Takes up 40% of the width */
+    background-color: var(--color-accent2); /* Optional for background color */
+    border-radius: 10px;
+    padding: 20px;
+    margin-right: 20px;
+}
+
+.devices-existing-div {
+    width: 55%; /* Takes up 60% of the width */
+    background-color: var(--color-light1); /* Optional for background color */
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.automation h2 { 
+    margin: 0;
+    text-align: center; /* Center the title */
+}
+
+.devices-add-new-div h2 {
+    color: var(--color-light2);
+}
+
+.devices-existing-div h2 {
+    color: var(--color-accent1);
+}
+
+.device-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.device-form .form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.device-form label {
+    color: var(--color-light1);
+    display: block;
+    text-align: center;
+}
+
+.device-form select,
+.device-form input {
+    width: 65%; /* Input/select takes the remaining space */
+    max-width: 400px;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.devices-submit {
+    padding: 10px 20px;
+    background-color: var(--color-light1);
+    color: var(--color-dark1);
+    font-weight: bold;
+    font-size: 1.1rem;
+    display: block;
+    margin: 20px auto 0;
+    border: none;
+    cursor: pointer;
+}
+
+.existing-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.existing-list li {
+    margin-bottom: 10px;
+}
+
+.devices-submit:hover {
+    /* change colorings */
+    background-color: var(--color-accent3);
+    color: var(--color-dark1);
 }
