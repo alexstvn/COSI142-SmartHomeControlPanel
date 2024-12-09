@@ -190,6 +190,23 @@ nav ul li a:hover {
 
 
 /* ------------------- ABOUT-PAGE SPECIFIC ------------------- */
+#about-page {
+    width: 70%; /* Set content width to 70% for larger screens */
+    margin: 0 auto; /* Center content horizontally */
+}
+
+#about-page h1 {
+    text-align: center; /* Center the h1 element */
+}
+
+@media (max-width: 768px) {
+    #about-page {
+        width: 100%; /* Use full width for smaller screens */
+        padding: 0 10px; /* Add some padding for better readability */
+    }
+}
+
+
 /* ~~~~~~~~~ ABOUT SENSORS ~~~~~~~~~ */
 
 /* ~~~~~~~~~ MEMBERS ~~~~~~~~~ */
@@ -198,12 +215,12 @@ nav ul li a:hover {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* Four equal-width columns */
     grid-template-rows: auto; /* Adjust rows automatically based on content */
-    gap: 15px; /* Space between cards */
+    gap: 20px; /* Space between cards */
     padding: 10px; /* Add padding around the grid */
 }
 
 .abt-4-card {
-    border-radius: 15px;
+    border-radius: 10px;
     overflow: hidden; /* Ensures the image doesn't show the background */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for a polished look */
     transition: 0.3s;
