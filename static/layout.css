@@ -102,6 +102,33 @@ nav ul li a:hover {
     text-align: center;
 }
 
+/* Centered and styled links section */
+.centered-section {
+    margin: 20px auto; /* Center horizontally */
+    max-width: 600px; /* Optional: Limit the width for a cleaner look */
+    text-align: center; /* Center align content */
+}
+
+/* Links styled like buttons */
+.devices-link {
+    display: inline-block;
+    background-color: var(--color-accent1);
+    color: var(--color-light2);
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 5px; /* Space between links */
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Hover effect for links */
+.devices-link:hover {
+    background-color: var(--color-accent3);
+    transform: scale(1.05); /* Slight zoom effect */
+}
+
 /* BUTTON BEHAVIOR */
 
 .manual-button {
