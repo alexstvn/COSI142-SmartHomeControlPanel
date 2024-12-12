@@ -38,11 +38,10 @@
         <!-- IMG -->
 
         <!-- TITLE -->
-        <h2>Motion Sensor + LEDs</h2>
+        <h2>Motion Sensor</h2>
 
         <!-- DATA READING -->
-        <p><strong>Device:</strong> <span>Loading...</span></p>
-        <p><strong>Device:</strong> <span>Loading...</span></p>
+        <p><strong>Motion:</strong> <span id="motion">Loading...</span></p>
     </div>
 
 </div>
@@ -84,12 +83,22 @@
                 } else {
                     console.warn('Device ID not found in data:', deviceId);
                 }
+
+
+                deviceId = 'motion_sensor';
+                deviceData = data[deviceId]
+
+                if (deviceData) {
+                    document.getElementById('motion').textContent = deviceData.motion;
+                } else {
+                    console.warn('Device ID not found in data:', deviceId);
+                }
             })
             .catch(error => console.error('Error fetching sensor data:', error));
     }
 
     // Periodically update the data every 5 seconds
-    setInterval(updateSensorDisplay, 5000);
+    setInterval(updateSensorDisplay, 1000);
 
     // Initial update when the page loads
     window.onload = updateSensorDisplay;

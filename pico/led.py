@@ -6,7 +6,7 @@ from utils import connect_wifi
 # Configuration
 LED_PIN = 16  # GPIO pin connected to the LED strip (e.g., D16)
 NUM_LEDS = 15  # Number of LEDs in the strip
-SERVER_URL = "http://192.168.50.206:5000/led_state"  # Replace with the server's URL
+SERVER_URL = "http://10.42.0.155:5000/led_state"  # Replace with the server's URL
 FETCH_INTERVAL = 1  # Fetch interval in seconds
 
 # Initialize LED strip
@@ -50,7 +50,7 @@ def main():
     """
     Main loop to fetch the LED state and update the LED strip.
     """
-    connect_wifi('73A', 'Brandeis73a')
+    connect_wifi('test123', '12345678')
     while True:
         led_state = fetch_led_state()
         if led_state:
