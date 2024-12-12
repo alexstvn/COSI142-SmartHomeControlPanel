@@ -38,12 +38,12 @@ while True:
 
     # LED behavior based on motion state
     if motion_detected:
-        print("Significant Motion Detected")
+        #print("Significant Motion Detected")
         last_motion_time = ticks_ms()  # Update the time of the last motion
 
-    else:
+  #  else:
         # Check if the timeout has elapsed
-        if ticks_diff(ticks_ms(), last_motion_time) > motion_timeout:
-            print("No motion detected for over a minute, turning off LEDs")
+    #    if ticks_diff(ticks_ms(), last_motion_time) > motion_timeout:
+   #         print("No motion detected for over a minute")
 
-    sleep(0.1)  # Small delay to avoid excessive polling
+    sleep(1)  # Small delay to avoid excessive polling
