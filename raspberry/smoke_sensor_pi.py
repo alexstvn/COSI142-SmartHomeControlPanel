@@ -59,7 +59,7 @@ class HM3301Sensor:
     def close(self):
         self.smbus.close()
 
-def main():
+def main(): 
     sensor = HM3301Sensor()
     server_ip = "10.42.0.163"  # Replace with your server's IP
 
