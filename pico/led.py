@@ -5,8 +5,8 @@ from utils import connect_wifi
 
 # Configuration
 LED_PIN = 16  # GPIO pin connected to the LED strip (e.g., D16)
-NUM_LEDS = 15  # Number of LEDs in the strip
-SERVER_URL = "http://10.42.0.155:5000/led_state"  # Replace with the server's URL
+NUM_LEDS = 50  # Number of LEDs in the strip
+SERVER_URL = "http://10.42.0.74:5000/led_state"  # Replace with the server's URL
 FETCH_INTERVAL = 1  # Fetch interval in seconds
 
 # Initialize LED strip
